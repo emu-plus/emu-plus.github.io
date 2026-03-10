@@ -8,6 +8,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
     <style>
         body { font-family: "Noto Sans JP", sans-serif; }
         .checked { background-color: #1d4ed8 !important; border-color: #60a5fa !important; color: white; }
@@ -15,12 +26,12 @@
         .excluded { opacity: 0.3; filter: grayscale(0.9); }
         .new-ghost { border-left: 5px solid #fbbf24; }
         .mimic-special { border-left: 5px solid #ec4899; }
-
+        
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #334155; }
-
+        
         .collapsible-content {
             max-height: 1200px;
             overflow: hidden;
@@ -32,12 +43,16 @@
             margin: 0 !important;
             padding: 0 !important;
         }
-
+        
         input[type=range] {
             -webkit-appearance: none;
             background: #1e293b;
             height: 6px;
             border-radius: 3px;
+        }
+        input[type=range]:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
         }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -48,7 +63,11 @@
             cursor: pointer;
             border: 2px solid #0f172a;
         }
-
+        input[type=range]:disabled::-webkit-slider-thumb {
+            background: #475569;
+            cursor: not-allowed;
+        }
+        
         .custom-checkbox {
             width: 18px;
             height: 18px;
@@ -77,8 +96,9 @@
         <header class="text-center mb-8 border-b border-slate-800 pb-6">
             <h1 class="text-4xl font-black text-blue-500 tracking-tighter italic">PHASMO FINDER</h1>
             <p class="text-slate-500 text-[10px] mt-2 tracking-[0.2em] uppercase font-bold">Expert Investigation Terminal</p>
+            <p class="text-slate-600 text-[9px] mt-2 tracking-[0.1em]">参考：https://gamerch.com/phasmophobiajp/805802　Last Update : 2026/3/11</p>
         </header>
-
+        
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <!-- Sidebar -->
             <div class="lg:col-span-1 space-y-6">
@@ -91,26 +111,33 @@
                         </h2>
                         <div class="flex flex-col gap-2" id="evidence-list"></div>
                     </section>
-
+                    
                     <!-- Hunt Threshold -->
                     <section>
                         <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em]">🔪 ハント開始閾値</h2>
-                            <span id="hunt-val" class="text-xs font-mono text-blue-500 font-bold">0%</span>
+                            <h2 class="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em]">🔪 ハント開始閾値</h2>
+                            <div class="flex items-center gap-2">
+                                <button id="lock-btn" onclick="toggleHuntLock()" class="p-1 rounded bg-slate-800 border border-slate-700 hover:bg-slate-700 transition-colors">
+                                    <svg id="lock-icon" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <span id="hunt-val" class="text-xs font-mono text-blue-500 font-black">0%</span>
+                            </div>
                         </div>
-                        <input type="range" id="hunt-slider" min="0" max="100" value="0" class="w-full mb-4" oninput="updateFilters()">
+                        <input type="range" id="hunt-slider" min="0" max="100" value="0" class="w-full mb-4" oninput="updateFilters()" disabled>
                         <label class="flex items-center gap-3 cursor-pointer group">
                             <div class="relative">
                                 <input type="checkbox" id="special-hunt" class="sr-only" onchange="updateFilters()">
                                 <div class="custom-checkbox group-hover:border-slate-500"></div>
                             </div>
-                            <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-bold">特殊ハントを含める</span>
+                            <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">特殊ハントを含める</span>
                         </label>
                     </section>
-
+                    
                     <!-- Speed Filter -->
                     <section>
-                        <h2 class="text-[10px] font-bold text-blue-400 mb-4 uppercase tracking-[0.2em]">🏃 移動速度フィルタ</h2>
+                        <h2 class="text-[10px] font-black text-blue-400 mb-4 uppercase tracking-[0.2em]">🏃 移動速度フィルタ</h2>
                         <div class="grid grid-cols-3 gap-2 mb-4">
                             <button onclick="toggleSpeedFilter('slow')" id="speed-slow" class="py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">遅い</button>
                             <button onclick="toggleSpeedFilter('normal')" id="speed-normal" class="py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">通常</button>
@@ -121,7 +148,7 @@
                                 <input type="checkbox" id="no-acceleration" class="sr-only" onchange="updateFilters()">
                                 <div class="custom-checkbox group-hover:border-slate-500"></div>
                             </div>
-                            <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-bold">視認加速なし</span>
+                            <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">視認加速なし</span>
                         </label>
                     </section>
                     
@@ -132,14 +159,14 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class="lg:col-span-3 space-y-4" id="ghost-display"></div>
         </div>
     </div>
-
+    
     <script>
         const evidenceTypes = ["EMFレベル5", "D.O.T.S.プロジェクター", "紫外線", "氷点下の温度", "ゴーストオーブ", "ゴーストライティング", "スピリットボックス"];
-
+        
         // huntTxt/speedTxt: 特殊な表記が必要な場合に指定。なければ数値から自動生成。
         const ghosts = [
             {
@@ -321,7 +348,7 @@
                 name: "ミミック (The Mimic)",
                 evidence: ["紫外線", "氷点下の温度", "スピリットボックス"],
                 forced: "ゴーストオーブ",
-                hunt: 74, specialHunt: 100, huntTxt: "可変 (模倣)",
+                hunt: 80, specialHunt: 100, huntTxt: "可変 (模倣)",
                 speed: 0.4, maxSpeed: 3, speedTxt: "可変 (模倣)", hasAccel: true, hasNormalSpeed: true,
                 note: "常に『偽オーブ』。30秒 - 2分に1回他を模倣。",
                 isMimic: true
@@ -389,19 +416,47 @@
                 note: "視認で爆速、非視認で超鈍足。加速なし。"
             }
         ];
-
+        
         let selectedEv = [];
         let excludedIds = new Set();
         let currentSpeedFilter = null;
-
+        let isHuntLocked = true;
+        
         function updateFilters() {
             const huntVal = parseInt(document.getElementById('hunt-slider').value);
             document.getElementById('hunt-val').innerText = `${huntVal}%`;
             render();
         }
-
+        
+        function toggleHuntLock() {
+            isHuntLocked = !isHuntLocked;
+            const slider = document.getElementById('hunt-slider');
+            const icon = document.getElementById('lock-icon');
+            const btn = document.getElementById('lock-btn');
+            
+            slider.disabled = isHuntLocked;
+            if (isHuntLocked) {
+                icon.innerHTML = '<path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />';
+                icon.classList.add('text-amber-500');
+                icon.classList.remove('text-green-500');
+                btn.classList.replace('bg-green-500/10', 'bg-slate-800');
+            } else {
+                icon.innerHTML = '<path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zM7 7a3 3 0 016 0v2H7V7z" />';
+                // シンプルな開錠アイコン
+                icon.innerHTML = '<path d="M10 12a2 2 0 100 4 2 2 0 000-4z" /><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" opacity=".3" /><path d="M14 7V9H16V7a4 4 0 00-8 0v2h2V7a2 2 0 114 0z" />';
+                icon.classList.remove('text-amber-500');
+                icon.classList.add('text-green-500');
+                btn.classList.replace('bg-slate-800', 'bg-green-500/10');
+            }
+        }
+        
         function toggleSpeedFilter(mode) {
             currentSpeedFilter = (currentSpeedFilter === mode) ? null : mode;
+            updateSpeedButtons();
+            render();
+        }
+        
+        function updateSpeedButtons() {
             ['slow', 'normal', 'fast'].forEach(m => {
                 const btn = document.getElementById(`speed-${m}`);
                 if (m === currentSpeedFilter) {
@@ -412,14 +467,13 @@
                     btn.classList.add('bg-slate-950', 'text-slate-500', 'border-slate-800');
                 }
             });
-            render();
         }
-
+        
         function toggleEvidence(ev) {
             selectedEv = selectedEv.includes(ev) ? selectedEv.filter(e => e !== ev) : [...selectedEv, ev];
             render();
         }
-
+        
         function render() {
             const evList = document.getElementById('evidence-list');
             evList.innerHTML = '';
@@ -430,24 +484,24 @@
                 btn.onclick = () => toggleEvidence(ev);
                 evList.appendChild(btn);
             });
-
+            
             const display = document.getElementById('ghost-display');
             display.innerHTML = '';
             
             const huntLimit = parseInt(document.getElementById('hunt-slider').value);
             const useSpecial = document.getElementById('special-hunt').checked;
             const noAccelChecked = document.getElementById('no-acceleration').checked;
-
+            
             const filtered = ghosts.filter(g => {
                 let evMatch = selectedEv.every(s => g.evidence.includes(s));
                 if (selectedEv.includes("ゴーストオーブ") && g.isMimic) {
                     evMatch = selectedEv.filter(s => s !== "ゴーストオーブ").every(s => g.evidence.includes(s));
                 }
                 if (!evMatch) return false;
-
+                
                 const targetHunt = useSpecial ? g.specialHunt : g.hunt;
                 if (huntLimit > 0 && targetHunt < huntLimit) return false;
-
+                
                 // --- Improved Speed Filtering ---
                 if (currentSpeedFilter) {
                     if (currentSpeedFilter === 'normal') {
@@ -465,14 +519,14 @@
                 if (noAccelChecked && g.hasAccel === true) return false;
                 return true;
             });
-
+            
             const sorted = [...filtered].sort((a, b) => (excludedIds.has(a.id) ? 1 : 0) - (excludedIds.has(b.id) ? 1 : 0));
-
+            
             sorted.forEach(g => {
                 const isMimicOrb = selectedEv.includes("ゴーストオーブ") && g.isMimic;
                 const isExcluded = excludedIds.has(g.id);
                 const formattedNote = g.note.split('<br>').map(line => `<div class="flex gap-2 mb-1"><span class="text-blue-500 font-bold shrink-0">■</span><span class="text-slate-300">${line}</span></div>`).join('');
-
+                
                 // --- Dynamic HUNT Display ---
                 let hStr = "";
                 if (g.huntTxt) {
@@ -482,7 +536,7 @@
                 } else {
                     hStr = `${g.hunt} %以下`;
                 }
-
+                
                 // --- Dynamic SPEED Display ---
                 let sStr = "";
                 if (g.speedTxt) {
@@ -492,12 +546,12 @@
                 } else {
                     sStr = `${g.speed} m/s　`;
                 }
-
+                
                 const forcedColor = (g.forced === "なし") ? "text-slate-400" : "text-red-400 font-bold";
-
+                
                 const card = document.createElement('div');
                 card.className = `ghost-card bg-slate-900 rounded-3xl border border-slate-800 shadow-xl overflow-hidden ${g.isNew ? 'new-ghost' : ''} ${isMimicOrb ? 'mimic-special' : ''} ${isExcluded ? 'excluded is-collapsed' : ''}`;
-
+                
                 card.innerHTML = `
                     <div class="p-6">
                         <div class="flex justify-between items-center gap-4 ${isExcluded ? '' : 'mb-5'}">
@@ -511,7 +565,7 @@
                                 </svg>
                             </button>
                         </div>
-
+                        
                         <div class="collapsible-content">
                             <div class="flex flex-col md:flex-row justify-between items-start gap-4 mb-5">
                                 <div class="w-full md:w-1/2">
@@ -533,7 +587,7 @@
                     </div>`;
                 display.appendChild(card);
             });
-
+            
             if (filtered.length === 0) {
                 display.innerHTML = `
                     <div class="text-center py-20 bg-slate-900/50 border-2 border-dashed border-slate-800 rounded-3xl">
@@ -541,23 +595,39 @@
                         <div class="text-slate-500 text-sm font-medium">条件に一致するゴーストはいません。</div>
                     </div>`;            }
         }
-
+        
         function toggleExclude(id) {
             if (excludedIds.has(id)) excludedIds.delete(id);
             else excludedIds.add(id);
             render();
         }
-
+        
         function resetAll() {
             selectedEv = [];
             excludedIds.clear();
             currentSpeedFilter = null;
-            document.getElementById('hunt-slider').value = 0;
+            isHuntLocked = true;
+            
+            // スライダーのリセット
+            const slider = document.getElementById('hunt-slider');
+            slider.value = 0;
+            slider.disabled = true;
+            
+            // ロックボタンのリセット
+            const icon = document.getElementById('lock-icon');
+            const btn = document.getElementById('lock-btn');
+            icon.innerHTML = '<path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />';
+            icon.classList.add('text-amber-500');
+            icon.classList.remove('text-green-500');
+            btn.className = "p-1 rounded bg-slate-800 border border-slate-700 hover:bg-slate-700 transition-colors";
+            
             document.getElementById('special-hunt').checked = false;
             document.getElementById('no-acceleration').checked = false;
+            
+            updateSpeedButtons();
             updateFilters();
         }
-
+        
         render();
     </script>
 </body>
