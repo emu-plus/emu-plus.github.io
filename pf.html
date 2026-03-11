@@ -123,14 +123,14 @@
                             </button>
                         </div>
                         <div class="flex justify-between text-xs font-mono font-black mb-2">
-                            <span>正気度</span>
-                            <span id="hunt-val">0%</span>
+                            <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">正気度</span>
+                            <span id="hunt-val" class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">0%</span>
                         </div>
                         <input type="range" id="hunt-slider" min="0" max="100" value="0" class="w-full mb-4" oninput="updateFilters()" disabled>
                         <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" id="special-hunt" class="sr-only" onchange="updateFilters()">
                             <div class="custom-checkbox group-hover:border-slate-500"></div>
-                            <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">特殊ハントを含める</span>
+                            <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">特殊ハント含む</span>
                         </label>
                     </section>
                     
