@@ -95,8 +95,8 @@
     <div class="max-w-7xl mx-auto">
         <header class="text-center mb-8 border-b border-slate-800 pb-6">
             <h1 class="text-4xl font-black text-blue-500 tracking-tighter italic">PHASMO FINDER</h1>
-            <p class="text-slate-500 text-[10px] mt-2 tracking-[0.2em] uppercase font-bold">Expert Investigation Terminal</p>
-            <p class="text-slate-600 text-[9px] mt-2 tracking-[0.1em]">参考：https://gamerch.com/phasmophobiajp/805802　Last Update : 2026/3/11</p>
+            <p class="text-slate-500 text-[10px] mt-2 tracking-[0.2em] font-bold">Phasmophobia Field Terminal</p>
+            <p class="text-slate-600 text-[9px] mt-2 tracking-[0.1em]">参考：https://gamerch.com/phasmophobiajp/805802　Last Update : 2026/3/12</p>
         </header>
         
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -422,6 +422,7 @@
         ];
         
         let selectedEv = [];
+        let excludedEvidence = [];
         let excludedIds = new Set();
         let currentSpeedFilter = null;
         let isHuntLocked = true;
@@ -493,7 +494,18 @@
         }
         
         function toggleEvidence(ev) {
-            selectedEv = selectedEv.includes(ev) ? selectedEv.filter(e => e !== ev) : [...selectedEv, ev];
+            if (selectedEv.includes(ev)) {
+                // 選択中 → 除外へ変更
+                selectedEv = selectedEv.filter(e => e !== ev);
+                excludedEvidence.push(ev);
+            } else if (excludedEvidence.includes(ev)) {
+                // 除外中 → なしへ変更
+                excludedEvidence = excludedEvidence.filter(e => e !== ev);
+            } else {
+                // なし → 選択へ変更
+                selectedEv.push(ev);
+            }
+            saveState();
             render();
         }
         
@@ -501,8 +513,16 @@
             const evList = document.getElementById('evidence-list');
             evList.innerHTML = '';
             evidenceTypes.forEach(ev => {
+                const isSelected = selectedEv.includes(ev);
+                const isExcluded = excludedEvidence.includes(ev); // 追加
                 const btn = document.createElement('button');
-                btn.className = `text-left px-4 py-2.5 rounded-xl text-[10px] font-black transition-all border ${selectedEv.includes(ev) ? 'checked shadow-lg shadow-blue-500/20 border-blue-400' : 'bg-slate-800 border-slate-700 text-slate-500 hover:bg-slate-700'}`;
+                
+                // スタイル判定
+                let style = 'bg-slate-800 border-slate-700 text-slate-500'; 
+                if (isSelected) style = 'checked shadow-lg shadow-blue-500/20 border-blue-400 bg-blue-600 text-white';
+                if (isExcluded) style = 'bg-red-900/50 border-red-500 text-red-200'; // 除外時は赤く
+                
+                btn.className = `text-left px-4 py-2.5 rounded-xl text-[10px] font-black transition-all border ${style}`;
                 btn.innerText = ev;
                 btn.onclick = () => toggleEvidence(ev);
                 evList.appendChild(btn);
@@ -521,6 +541,8 @@
                     evMatch = selectedEv.filter(s => s !== "ゴーストオーブ").every(s => g.evidence.includes(s));
                 }
                 if (!evMatch) return false;
+                
+                if (excludedEvidence.some(s => g.evidence.includes(s))) return false;
                 
                 const targetHunt = useSpecial ? g.specialHunt : g.hunt;
                 if (huntLimit > 0 && targetHunt < huntLimit) return false;
@@ -625,8 +647,37 @@
             render();
         }
         
+        function saveState() {
+            const state = {
+                selectedEv,
+                excludedEvidence,
+                currentSpeedFilter,
+                isHuntLocked,
+                isSpeedLocked,
+                // 必要に応じて他のフィルター状態も追加
+            };
+            localStorage.setItem('phasmo-terminal-state', JSON.stringify(state));
+        }
+        
+        function loadState() {
+            const saved = localStorage.getItem('phasmo-terminal-state');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    selectedEv = parsed.selectedEv || [];
+                    excludedEvidence = parsed.excludedEvidence || [];
+                    currentSpeedFilter = parsed.currentSpeedFilter || null;
+                    isHuntLocked = parsed.isHuntLocked !== undefined ? parsed.isHuntLocked : true;
+                    isSpeedLocked = parsed.isSpeedLocked !== undefined ? parsed.isSpeedLocked : true;
+                } catch (e) {
+                    console.error("セーブデータの読み込みに失敗しました", e);
+                }
+            }
+        }
+        
         function resetAll() {
             selectedEv = [];
+            excludedEvidence = [];
             excludedIds.clear();
             currentSpeedFilter = null;
             
@@ -649,7 +700,7 @@
             speedIcon.classList.add('text-amber-500');
             speedIcon.classList.remove('text-green-500');
             speedBtn.className = "p-1 rounded bg-slate-800 border border-slate-700 hover:bg-slate-700 transition-colors";
-
+            
             document.getElementById('special-hunt').checked = false;
             document.getElementById('no-acceleration').checked = false;
             
@@ -657,6 +708,7 @@
             updateFilters();
         }
         
+        loadState();
         render();
     </script>
 </body>
