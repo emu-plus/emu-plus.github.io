@@ -165,7 +165,7 @@
                     </section>
                     
                     <div class="pt-4 border-t border-slate-800">
-                        <button onclick="resetAll()" class="w-full py-3 bg-red-500/10 text-red-500 text-[10px] font-black rounded-xl border border-red-500/20 hover:bg-red-500 hover:text-white transition-all uppercase tracking-widest">
+                        <button id="reset-btn" onclick="resetAll()" class="w-full py-3 bg-red-500/10 text-red-500 text-[10px] font-black rounded-xl border border-red-500/20 hover:bg-red-500 hover:text-white transition-all uppercase tracking-widest">
                             Reset All Data
                         </button>
                     </div>
@@ -521,7 +521,6 @@
                 const isExcluded = excludedEvidence.includes(ev);
                 const btn = document.createElement('button');
                 
-                // スタイル判定
                 let style = 'bg-slate-800 border-slate-700 text-slate-500'; 
                 if (isSelected) style = 'checked shadow-lg shadow-blue-500/20 border-blue-400 bg-blue-600 text-white';
                 if (isExcluded) style = 'bg-red-900/50 border-red-500 text-red-200';
@@ -634,12 +633,36 @@
                 display.appendChild(card);
             });
             
+            // --- リセットボタンの状態監視 ---
+            const resetBtn = document.getElementById('reset-btn');
+            if (resetBtn) {
+                const isFiltered = 
+                    selectedEv.length > 0 || 
+                    excludedEvidence.length > 0 || 
+                    excludedIds.size > 0 || 
+                    currentSpeedFilter !== null ||
+                    parseInt(document.getElementById('hunt-slider').value) > 0 ||
+                    document.getElementById('special-hunt').checked ||
+                    document.getElementById('no-acceleration').checked;
+
+                if (isFiltered) {
+                    // 条件が選ばれているとき：赤っぽく光らせるクラスを付与
+                    resetBtn.classList.add('bg-red-900', 'border-red-500', 'text-red-200');
+                    resetBtn.classList.remove('bg-slate-800', 'border-slate-700', 'text-slate-500');
+                } else {
+                    // 初期状態のとき：元のスタイルに戻す
+                    resetBtn.classList.remove('bg-red-900', 'border-red-500', 'text-red-200');
+                    resetBtn.classList.add('bg-slate-800', 'border-slate-700', 'text-slate-500');
+                }
+            }
+            
             if (filtered.length === 0) {
                 display.innerHTML = `
                     <div class="text-center py-20 bg-slate-900/50 border-2 border-dashed border-slate-800 rounded-3xl">
                         <div class="text-2xl mb-4">👻</div>
                         <div class="text-slate-500 text-sm font-medium">条件に一致するゴーストはいません。</div>
-                    </div>`;            }
+                    </div>`;
+            }
         }
         
         function toggleExclude(id) {
