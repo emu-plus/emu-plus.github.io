@@ -118,6 +118,8 @@
                 <a href="https://gamerch.com/phasmophobiajp/193194#outline__%E5%90%8D%E5%89%8D" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ゴーストについて#名前 (Phasmophobia 日本語wiki)</a>
                 <span class="text-slate-600 text-[9px]">/</span>
                 <a href="https://gamerch.com/phasmophobiajp/193837" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">マップ (Phasmophobia 日本語wiki)</a>
+                <span class="text-slate-600 text-[9px]">/</span>
+                <a href="https://gamerch.com/phasmophobiajp/822758" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">呪いのアイテム一覧表 (Phasmophobia 日本語wiki)</a>
             </div>
         </header>
         
@@ -142,12 +144,21 @@
                                 </svg>
                             </button>
                         </div>
+                        
                         <div class="flex justify-between text-xs font-mono font-black mb-2">
                             <span class="text-[10px] text-slate-400">正気度</span>
                             <span id="hunt-val" class="text-[10px] text-slate-400">0%</span>
                         </div>
+                        
                         <input type="range" id="hunt-slider" min="0" max="100" value="0" class="w-full mb-4" oninput="updateFilters()" disabled>
-                        <label class="flex items-center gap-3 cursor-pointer group">
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-4">
+                            <button onclick="toggleHuntLevelFilter('low')" id="hunt-level-low" class="hunt-level-btn py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">低い</button>
+                            <button onclick="toggleHuntLevelFilter('normal')" id="hunt-level-normal" class="hunt-level-btn py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">通常</button>
+                            <button onclick="toggleHuntLevelFilter('high')" id="hunt-level-high" class="hunt-level-btn py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">高い</button>
+                        </div>
+                        
+                        <label id="special-hunt-label" class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" id="special-hunt" class="sr-only" onchange="updateFilters()">
                             <div class="custom-checkbox group-hover:border-slate-500"></div>
                             <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">特殊ハント含む</span>
@@ -169,7 +180,7 @@
                             <button onclick="toggleSpeedFilter('normal')" id="speed-normal" class="speed-btn py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">通常</button>
                             <button onclick="toggleSpeedFilter('fast')" id="speed-fast" class="speed-btn py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">速い</button>
                         </div>
-                        <label class="flex items-center gap-3 cursor-pointer group">
+                        <label id="no-acceleration-label" class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" id="no-acceleration" class="sr-only" onchange="updateFilters()">
                             <div class="custom-checkbox group-hover:border-slate-500"></div>
                             <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">視認加速なし</span>
@@ -206,7 +217,7 @@
                 name: "オバンボ (Obambo)",
                 evidence: ["D.O.T.S.プロジェクター", "紫外線", "ゴーストライティング"],
                 forced: "なし",
-                hunt: 65, specialHunt: 65, huntTxt: "65 / 10",
+                hunt: 65, minHunt: 10, specialHunt: 65, huntTxt: "65 / 10",
                 speed: 1.445, maxSpeed: 1.955, hasAccel: true, hasNormalSpeed: false,
                 note: "2分毎に状態変化 (ハント中も起こる) 。<br><span class='font-bold'>攻撃的な状態 : 65%以下 & 1.955m/s (速) & 干渉・超常現象少 & ハントの長さ0.8倍</span><br><span class='font-bold'>穏やかな状態 : 10%以下 & 1.445m/s (遅) & 干渉・超常現象多</span>",
                 isNew: true
@@ -216,7 +227,7 @@
                 name: "怨霊 (Onryo)",
                 evidence: ["氷点下の温度", "ゴーストオーブ", "スピリットボックス"],
                 forced: "なし",
-                hunt: 60, specialHunt: 100, huntTxt: "60 / 40 / <span class='text-yellow-500 font-bold'>(特殊100)</span>",
+                hunt: 60, minHunt: 40, specialHunt: 100, huntTxt: "60 / 40 / <span class='text-yellow-500 font-bold'>(特殊100)</span>",
                 speed: 1.7, maxSpeed: 1.7, hasAccel: true, hasNormalSpeed: true,
                 note: "火をつけない。<br><span class='text-lime-500 font-bold'>火を3回消す毎に特殊ハント。</span><br><span class='font-bold'>火の側 (4m) : 40%以下 & ハント不可 (呪いのハント除く)</span><br>死亡が多いと火を消す率アップ。<br>火が十字架代わりになる。つけ直した火が20秒以内で消えた場合ハントを防いだ証拠。"
             },
@@ -225,7 +236,7 @@
                 name: "ガルル (Gallu)",
                 evidence: ["EMFレベル5", "紫外線", "スピリットボックス"],
                 forced: "なし",
-                hunt: 60, specialHunt: 60, huntTxt: "60 / 50 / 40",
+                hunt: 60, normalHunt: 50, minHunt: 40, specialHunt: 60, huntTxt: "60 / 50 / 40",
                 speed: 1.36, maxSpeed: 1.955, speedTxt: "1.955 / 1.7 / 1.36", hasAccel: true, hasNormalSpeed: true,
                 note: "防護装備 (浄化香、十字架、塩) で激昂し、防護装備性能低下。<br>激昂のハント後は疲弊し、防護装備性能向上。<br>疲弊中に防護装備を使うと通常に戻る。<br><span class='font-bold'>激昂中 : 60%以下 & 1.955m/s (速)</span><br><span class='font-bold'>疲弊中 : 40%以下 & 1.36m/s (遅)</span><br>通常 : 50%以下 & 1.7m/s<br>激昂中は塩を踏まないが、状態移行に2秒かかるため注意。",
                 isNew: true
@@ -271,7 +282,7 @@
                 name: "セーイ (Thaye)",
                 evidence: ["D.O.T.S.プロジェクター", "ゴーストオーブ", "ゴーストライティング"],
                 forced: "なし",
-                hunt: 74, specialHunt: 74, huntTxt: "74 - 14",
+                hunt: 74, normalHunt: 50, minHunt: 14, specialHunt: 74, huntTxt: "74 - 14",
                 speed: 1, maxSpeed: 2.75, speedTxt: "2.75 - 1", hasAccel: false, hasNormalSpeed: true,
                 note: "時間経過 (1 - 2分後) で、同室 or 3m内に人がいると老化 (老化できない場合は30秒後に再試行) 。<br><span class='font-bold'>最初 : 74%以下 & 2.75m/s (速) & 干渉・超常現象2倍</span><br><span class='font-bold'>老化毎発生 : 6%ずつ低下 & 0.175m/sずつ低下 & 活動頻度減少</span><br><span class='font-bold'>10回老化後 : 14%以下 & 1m/s (遅) & (9回目以降) 超常現象なし</span><br>ウィジャ盤で年齢を聞くと老化後は増加している。<br>視認加速なし。"
             },
@@ -280,7 +291,7 @@
                 name: "ダヤン (Dayan)",
                 evidence: ["EMFレベル5", "ゴーストオーブ", "スピリットボックス"],
                 forced: "なし",
-                hunt: 65, specialHunt: 65, huntTxt: "65 / 50 / 45",
+                hunt: 65, normalHunt: 50, minHunt: 45, specialHunt: 65, huntTxt: "65 / 50 / 45",
                 speed: 1.2, maxSpeed: 2.25, speedTxt: "2.25 / 1.7 / 1.2", hasAccel: 'partial', hasNormalSpeed: true,
                 note: "女性のみ。<br>10m内で1番近くの人に反応。<br><span class='font-bold'>動く : 65%以下 & 2.25m/s (速) 固定</span><br><span class='font-bold'>止まる : 45%以下 & 1.2m/s (遅) 固定</span><br><span class='font-bold'>誰もいない : 50%以下 & 1.7m/s (通常)</span>",
                 isNew: true
@@ -370,7 +381,7 @@
                 name: "ミミック (The Mimic)",
                 evidence: ["紫外線", "氷点下の温度", "スピリットボックス"],
                 forced: "ゴーストオーブ",
-                hunt: 80, specialHunt: 100, huntTxt: "可変 (模倣)",
+                hunt: 80, normalHunt: 50, minHunt: 10, specialHunt: 100, huntTxt: "可変 (模倣)",
                 speed: 0.4, maxSpeed: 3, speedTxt: "可変 (模倣)", hasAccel: true, hasNormalSpeed: true,
                 note: "開始1分後から30秒 - 2分に1回他を模倣。ハント開始や移動速度も模倣によって変化。<br>セーイに模倣しても老化はできない。モーロイに模倣しても浄化香の効果は変わらない。その他模倣できないことあり。<br>必ずオーブを出す。オーブは証拠として扱われない。",
                 isMimic: true
@@ -380,7 +391,7 @@
                 name: "メアー (Mare)",
                 evidence: ["ゴーストオーブ", "ゴーストライティング", "スピリットボックス"],
                 forced: "なし",
-                hunt: 60, specialHunt: 60, huntTxt: "60 / 40",
+                hunt: 60, minHunt: 40, specialHunt: 60, huntTxt: "60 / 40",
                 speed: 1.7, maxSpeed: 1.7, hasAccel: true, hasNormalSpeed: true,
                 note: "<span class='font-bold'>照明オン : 40%以下</span><br><span class='font-bold'>照明オフ : 60%以下</span><br>照明関係の干渉が多い。照明関係の電源をつけない。ブレーカーは無関係。<br>4m内の照明をオンにした瞬間に低確率でオフ。スイッチ操作に10秒のクールタイムがあるため注意。<br>超常現象で照明の破壊率高。<br>照明オンで長距離徘徊可能。"
             },
@@ -407,7 +418,7 @@
                 name: "妖怪 (Yokai)",
                 evidence: ["D.O.T.S.プロジェクター", "ゴーストオーブ", "スピリットボックス"],
                 forced: "なし",
-                hunt: 80, specialHunt: 80, huntTxt: "80 / 50",
+                hunt: 80, normalHunt: 50, specialHunt: 80, huntTxt: "80 / 50",
                 speed: 1.7, maxSpeed: 1.7, hasAccel: true, hasNormalSpeed: true,
                 note: "同室でVCや無線を使うと活発化。<br><span class='font-bold'>同室でVCや無線を使う : 80%以下</span><br>ハント中は2.5m内の声や無線、電子機器に反応 (通常声・無線9m、電子機器7.5m) 。"
             },
@@ -416,7 +427,7 @@
                 name: "雷獣 (Raiju)",
                 evidence: ["EMFレベル5", "D.O.T.S.プロジェクター", "ゴーストオーブ"],
                 forced: "なし",
-                hunt: 65, specialHunt: 65, huntTxt: "65 / 50",
+                hunt: 65, normalHunt: 50, specialHunt: 65, huntTxt: "65 / 50",
                 speed: 1.7, maxSpeed: 2.5, speedTxt: "2.5 / 1.7", hasAccel: 'partial', hasNormalSpeed: true,
                 note: "<span class='font-bold'>電子機器付近 (小マップ : 6m、中マップ : 8m、大マップ : 10m) : 65%以下 & 2.5m/s (速) 固定</span><br>電子機器の誤作動の距離、実体化時の心音の発生距離が15mと長く (通常10m) 、心音は音も大きい。"
             },
@@ -444,12 +455,21 @@
         let excludedEvidence = [];
         let excludedIds = new Set();
         let currentSpeedFilter = null;
+        let currentHuntLevelFilter = null;
         let isHuntLocked = true;
         let isSpeedLocked = true;
         
         function updateFilters() {
-            const huntVal = parseInt(document.getElementById('hunt-slider').value);
+            const slider = document.getElementById('hunt-slider');
+            const huntVal = parseInt(slider.value);
             document.getElementById('hunt-val').innerText = `${huntVal}%`;
+            
+            // スライダーが使われたら、ハントレベルボタンは解除
+            if (huntVal > 0 && currentHuntLevelFilter !== null) {
+                currentHuntLevelFilter = null;
+            }
+            
+            updateHuntLevelButtons();
             render();
         }
         
@@ -459,7 +479,8 @@
             const icon = document.getElementById('lock-icon');
             const btn = document.getElementById('lock-btn');
             
-            slider.disabled = isHuntLocked;
+            slider.disabled = isHuntLocked || currentHuntLevelFilter !== null;
+            
             if (isHuntLocked) {
                 icon.innerHTML = '<path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />';
                 icon.classList.add('text-amber-500');
@@ -471,7 +492,100 @@
                 icon.classList.add('text-green-500');
                 btn.classList.replace('bg-slate-800', 'bg-green-500/10');
             }
+            
             render();
+        }
+        
+        function toggleHuntLevelFilter(mode) {
+            if (isHuntLocked) return;
+            
+            const slider = document.getElementById('hunt-slider');
+            const sliderVal = parseInt(slider.value);
+            
+            // スライダーが使われている間はハントレベルボタンは使わない
+            if (sliderVal > 0 && currentHuntLevelFilter !== mode) return;
+            
+            if (currentHuntLevelFilter === mode) {
+                currentHuntLevelFilter = null;
+            } else {
+                currentHuntLevelFilter = mode;
+                slider.value = 0;
+                document.getElementById('hunt-val').innerText = '0%';
+            }
+            
+            updateHuntLevelButtons();
+            render();
+        }
+        
+        function updateHuntLevelButtons() {
+            const sliderVal = parseInt(document.getElementById('hunt-slider').value);
+            const shouldDisable = isHuntLocked || sliderVal > 0;
+            
+            ['low', 'normal', 'high'].forEach(mode => {
+                const btn = document.getElementById(`hunt-level-${mode}`);
+                if (!btn) return;
+                
+                btn.disabled = shouldDisable;
+                
+                if (mode === currentHuntLevelFilter && !shouldDisable) {
+                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-400');
+                    btn.classList.remove('bg-slate-950', 'text-slate-500', 'border-slate-800', 'opacity-30', 'cursor-not-allowed');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-400');
+                    btn.classList.add('bg-slate-950', 'text-slate-500', 'border-slate-800');
+                    
+                    if (shouldDisable) {
+                        btn.classList.add('opacity-30', 'cursor-not-allowed');
+                    } else {
+                        btn.classList.remove('opacity-30', 'cursor-not-allowed');
+                    }
+                }
+            });
+        }
+        
+        function getHuntThresholds(ghost, includeSpecial = false) {
+            const values = [];
+            
+            if (typeof ghost.hunt === 'number') values.push(ghost.hunt);
+            if (typeof ghost.normalHunt === 'number') values.push(ghost.normalHunt);
+            if (typeof ghost.minHunt === 'number') values.push(ghost.minHunt);
+            
+            if (includeSpecial && typeof ghost.specialHunt === 'number') {
+                values.push(ghost.specialHunt);
+            }
+            
+            return [...new Set(values)];
+        }
+        
+        function toggleSpeedFilter(mode) {
+            if (!isSpeedLocked) {
+                currentSpeedFilter = (currentSpeedFilter === mode) ? null : mode;
+                updateSpeedButtons();
+                render();
+            }
+        }
+        
+        function updateSpeedButtons() {
+            ['slow', 'normal', 'fast'].forEach(m => {
+                const btn = document.getElementById(`speed-${m}`);
+                if (!btn) return;
+                
+                btn.disabled = isSpeedLocked;
+                
+                if (m === currentSpeedFilter && !isSpeedLocked) {
+                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-400');
+                    btn.classList.remove('bg-slate-950', 'text-slate-500', 'border-slate-800', 'opacity-30', 'cursor-not-allowed');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-400');
+                    btn.classList.add('bg-slate-950', 'text-slate-500', 'border-slate-800');
+                    
+                    if (isSpeedLocked) {
+                        btn.classList.add('opacity-30', 'cursor-not-allowed');
+                    } else {
+                        btn.classList.remove('opacity-30', 'cursor-not-allowed');
+                    }
+                }
+            });
         }
         
         function toggleSpeedLock() {
@@ -493,27 +607,6 @@
             render();
         }
         
-        function toggleSpeedFilter(mode) {
-            if (!isSpeedLocked) {
-                currentSpeedFilter = (currentSpeedFilter === mode) ? null : mode;
-                updateSpeedButtons();
-                render();
-            }
-        }
-        
-        function updateSpeedButtons() {
-            ['slow', 'normal', 'fast'].forEach(m => {
-                const btn = document.getElementById(`speed-${m}`);
-                if (m === currentSpeedFilter && !isSpeedLocked) {
-                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-400');
-                    btn.classList.remove('bg-slate-950', 'text-slate-500', 'border-slate-800');
-                } else {
-                    btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-400');
-                    btn.classList.add('bg-slate-950', 'text-slate-500', 'border-slate-800');
-                }
-            });
-        }
-        
         function toggleEvidence(ev) {
             if (selectedEv.includes(ev)) {
                 selectedEv = selectedEv.filter(e => e !== ev);
@@ -531,19 +624,18 @@
             const btn = document.getElementById('reset-btn');
             if (!btn) return;
             
-            // 判定ロジックのみ
-            const isFiltered = 
-                selectedEv.length > 0 || 
-                excludedEvidence.length > 0 || 
-                excludedIds.size > 0 || 
+            const isFiltered =
+                selectedEv.length > 0 ||
+                excludedEvidence.length > 0 ||
+                excludedIds.size > 0 ||
                 currentSpeedFilter !== null ||
+                currentHuntLevelFilter !== null ||
                 parseInt(document.getElementById('hunt-slider').value) > 0 ||
                 document.getElementById('special-hunt').checked ||
                 document.getElementById('no-acceleration').checked ||
-                !isHuntLocked || 
+                !isHuntLocked ||
                 !isSpeedLocked;
                 
-            // クラスを入れ替える（他のクラスはそのまま維持される）
             if (isFiltered) {
                 btn.classList.add('btn-active');
                 btn.classList.remove('btn-default');
@@ -558,35 +650,49 @@
             const huntIcon = document.getElementById('lock-icon');
             const huntBtn = document.getElementById('lock-btn');
             const slider = document.getElementById('hunt-slider');
+            const specialHuntCheckbox = document.getElementById('special-hunt');
+            const specialHuntLabel = document.getElementById('special-hunt-label');
             
-            slider.disabled = isHuntLocked;
+            slider.disabled = isHuntLocked || currentHuntLevelFilter !== null;
+            specialHuntCheckbox.disabled = isHuntLocked;
+            
             if (isHuntLocked) {
                 huntIcon.innerHTML = '<path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />';
                 huntIcon.classList.add('text-amber-500');
                 huntIcon.classList.remove('text-green-500');
                 huntBtn.classList.replace('bg-green-500/10', 'bg-slate-800');
+                specialHuntLabel.classList.add('opacity-30', 'cursor-not-allowed');
             } else {
                 huntIcon.innerHTML = '<path d="M10 12a2 2 0 100 4 2 2 0 000-4z" /><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" opacity=".3" /><path d="M14 7V9H16V7a4 4 0 00-8 0v2h2V7a2 2 0 114 0z" />';
                 huntIcon.classList.remove('text-amber-500');
                 huntIcon.classList.add('text-green-500');
                 huntBtn.classList.replace('bg-slate-800', 'bg-green-500/10');
+                specialHuntLabel.classList.remove('opacity-30', 'cursor-not-allowed');
             }
             
             // 移動速度ロックの状態同期
             const speedIcon = document.getElementById('speed-lock-icon');
             const speedBtn = document.getElementById('speed-lock-btn');
+            const noAccelCheckbox = document.getElementById('no-acceleration');
+            const noAccelLabel = document.getElementById('no-acceleration-label');
+            
+            noAccelCheckbox.disabled = isSpeedLocked;
+            
             if (isSpeedLocked) {
                 speedIcon.innerHTML = '<path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />';
                 speedIcon.classList.add('text-amber-500');
                 speedIcon.classList.remove('text-green-500');
                 speedBtn.classList.replace('bg-green-500/10', 'bg-slate-800');
+                noAccelLabel.classList.add('opacity-30', 'cursor-not-allowed');
             } else {
                 speedIcon.innerHTML = '<path d="M10 12a2 2 0 100 4 2 2 0 000-4z" /><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" opacity=".3" /><path d="M14 7V9H16V7a4 4 0 00-8 0v2h2V7a2 2 0 114 0z" />';
                 speedIcon.classList.remove('text-amber-500');
                 speedIcon.classList.add('text-green-500');
                 speedBtn.classList.replace('bg-slate-800', 'bg-green-500/10');
+                noAccelLabel.classList.remove('opacity-30', 'cursor-not-allowed');
             }
             
+            updateHuntLevelButtons();
             updateSpeedButtons();
             updateResetButtonAppearance();
         }
@@ -599,7 +705,7 @@
                 const isExcluded = excludedEvidence.includes(ev);
                 const btn = document.createElement('button');
                 
-                let style = 'bg-slate-800 border-slate-700 text-slate-500'; 
+                let style = 'bg-slate-800 border-slate-700 text-slate-500';
                 if (isSelected) style = 'checked shadow-lg shadow-blue-500/20 border-blue-400 bg-blue-600 text-white';
                 if (isExcluded) style = 'bg-red-900/50 border-red-500 text-red-200';
                 
@@ -625,10 +731,20 @@
                 
                 if (excludedEvidence.some(s => g.evidence.includes(s))) return false;
                 
-                const targetHunt = useSpecial ? g.specialHunt : g.hunt;
-                if (huntLimit > 0 && targetHunt < huntLimit) return false;
+                const huntValues = getHuntThresholds(g, useSpecial);
                 
-                // --- Improved Speed Filtering ---
+                // スライダー検索
+                if (huntLimit > 0) {
+                    if (!huntValues.some(v => v >= huntLimit)) return false;
+                }
+                
+                // 高い / 通常 / 低い ボタン検索
+                if (currentHuntLevelFilter) {
+                    if (currentHuntLevelFilter === 'high' && !huntValues.some(v => v > 50)) return false;
+                    if (currentHuntLevelFilter === 'normal' && !huntValues.some(v => v === 50)) return false;
+                    if (currentHuntLevelFilter === 'low' && !huntValues.some(v => v < 50)) return false;
+                }
+                
                 if (currentSpeedFilter) {
                     if (currentSpeedFilter === 'normal') {
                         if (!g.hasNormalSpeed) return false;
@@ -650,7 +766,6 @@
                 const isExcluded = excludedIds.has(g.id);
                 const formattedNote = g.note.split('<br>').map(line => `<div class="flex gap-2 mb-1"><span class="text-blue-500 font-bold shrink-0">■</span><span class="text-slate-300">${line}</span></div>`).join('');
                 
-                // --- Dynamic HUNT Display ---
                 let hStr = "";
                 if (g.huntTxt) {
                     hStr = g.huntTxt.includes('%') ? g.huntTxt : g.huntTxt + " %以下";
@@ -660,7 +775,6 @@
                     hStr = `${g.hunt} %以下`;
                 }
                 
-                // --- Dynamic SPEED Display ---
                 let sStr = "";
                 if (g.speedTxt) {
                     sStr = g.speedTxt.includes('m/s') ? g.speedTxt : g.speedTxt + " m/s　";
@@ -737,10 +851,10 @@
                 selectedEv,
                 excludedEvidence,
                 currentSpeedFilter,
+                currentHuntLevelFilter,
                 isHuntLocked,
                 isSpeedLocked,
                 excludedIds: Array.from(excludedIds),
-                // スライダーの値を保存
                 huntValue: parseInt(document.getElementById('hunt-slider').value),
                 specialHunt: document.getElementById('special-hunt').checked,
                 noAccelChecked: document.getElementById('no-acceleration').checked
@@ -756,18 +870,21 @@
                     selectedEv = parsed.selectedEv || [];
                     excludedEvidence = parsed.excludedEvidence || [];
                     currentSpeedFilter = parsed.currentSpeedFilter || null;
+                    currentHuntLevelFilter = parsed.currentHuntLevelFilter || null;
                     isHuntLocked = parsed.isHuntLocked !== undefined ? parsed.isHuntLocked : true;
                     isSpeedLocked = parsed.isSpeedLocked !== undefined ? parsed.isSpeedLocked : true;
                     excludedIds = new Set(parsed.excludedIds || []);
                     
-                   const slider = document.getElementById('hunt-slider');
-                    // 保存された値をスライダーに反映
-                    if (parsed.huntValue !== undefined) {
+                    const slider = document.getElementById('hunt-slider');
+                    
+                    if (currentHuntLevelFilter !== null) {
+                        slider.value = 0;
+                    } else if (parsed.huntValue !== undefined) {
                         slider.value = parsed.huntValue;
                     } else {
                         slider.value = 0;
                     }
-                    // 数値表示(0%)を更新
+                    
                     document.getElementById('hunt-val').innerText = `${slider.value}%`;
                     
                     document.getElementById('special-hunt').checked = parsed.specialHunt || false;
@@ -783,6 +900,7 @@
             excludedEvidence = [];
             excludedIds.clear();
             currentSpeedFilter = null;
+            currentHuntLevelFilter = null;
             
             isHuntLocked = true;
             const slider = document.getElementById('hunt-slider');
@@ -807,6 +925,7 @@
             document.getElementById('special-hunt').checked = false;
             document.getElementById('no-acceleration').checked = false;
             
+            updateHuntLevelButtons();
             updateSpeedButtons();
             updateFilters();
             
