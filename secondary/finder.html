@@ -110,9 +110,9 @@
         <header class="text-center mb-8 border-b border-slate-800 pb-6">
             <h1 class="text-4xl font-black text-blue-500 tracking-tighter italic">PHASMO FINDER</h1>
             <p class="text-slate-500 text-[10px] mt-2 tracking-[0.2em] font-bold">- Phasmophobia Field Terminal -</p>
-            <p class="text-slate-600 text-[9px] mt-2 tracking-[0.1em]">参考：<a href="https://gamerch.com/phasmophobiajp/805802" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ゴーストの特徴一覧表 (Phasmophobia 日本語wiki)</a>　Last Update : 2026/3/16</p>
+            <p class="text-slate-600 text-[9px] mt-2 tracking-[0.1em]">参考：<a href="https://gamerch.com/phasmophobiajp/805802" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ゴーストの特徴一覧表 (Phasmophobia 日本語wiki)</a>　Last Update : 2026/3/18</p>
             <div class="mt-2 flex flex-wrap justify-center items-center gap-x-1 gap-y-1">
-                <span class="text-slate-600 text-[9px] tracking-[0.1em]">便利外部ツール :</span>
+                <span class="text-slate-600 text-[9px] tracking-[0.1em]">便利外部サイト :</span>
                 <a href="https://stopwatch.onl.jp/" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ストップウォッチ</a>
                 <span class="text-slate-600 text-[9px]">/</span>
                 <a href="https://gamerch.com/phasmophobiajp/193194#outline__%E5%90%8D%E5%89%8D" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ゴーストについて#名前 (Phasmophobia 日本語wiki)</a>
@@ -153,9 +153,9 @@
                         <input type="range" id="hunt-slider" min="0" max="100" value="0" class="w-full mb-4" oninput="updateFilters()" disabled>
                         
                         <div class="grid grid-cols-3 gap-2 mb-4">
-                            <button onclick="toggleHuntLevelFilter('low')" id="hunt-level-low" class="hunt-level-btn py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">低い</button>
-                            <button onclick="toggleHuntLevelFilter('normal')" id="hunt-level-normal" class="hunt-level-btn py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">通常</button>
-                            <button onclick="toggleHuntLevelFilter('high')" id="hunt-level-high" class="hunt-level-btn py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">高い</button>
+                            <button onclick="toggleHuntLevelFilter('low')" id="hunt-level-low" class="hunt-level-btn py-2 text-[9px] font-black rounded-lg border border-slate-700 bg-slate-800 text-slate-500 transition-all">低い</button>
+                            <button onclick="toggleHuntLevelFilter('normal')" id="hunt-level-normal" class="hunt-level-btn py-2 text-[9px] font-black rounded-lg border border-slate-700 bg-slate-800 text-slate-500 transition-all">通常</button>
+                            <button onclick="toggleHuntLevelFilter('high')" id="hunt-level-high" class="hunt-level-btn py-2 text-[9px] font-black rounded-lg border border-slate-700 bg-slate-800 text-slate-500 transition-all">高い</button>
                         </div>
                         
                         <label id="special-hunt-label" class="flex items-center gap-3 cursor-pointer group">
@@ -176,9 +176,9 @@
                             </button>
                         </div>
                         <div class="grid grid-cols-3 gap-2 mb-4">
-                            <button onclick="toggleSpeedFilter('slow')" id="speed-slow" class="speed-btn py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">遅い</button>
-                            <button onclick="toggleSpeedFilter('normal')" id="speed-normal" class="speed-btn py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">通常</button>
-                            <button onclick="toggleSpeedFilter('fast')" id="speed-fast" class="speed-btn py-2 text-[9px] font-black rounded-lg border border-slate-800 bg-slate-950 text-slate-500 transition-all">速い</button>
+                            <button onclick="toggleSpeedFilter('slow')" id="speed-slow" class="speed-btn py-2 text-[9px] font-black rounded-lg border border-slate-700 bg-slate-800 text-slate-500 transition-all">遅い</button>
+                            <button onclick="toggleSpeedFilter('normal')" id="speed-normal" class="speed-btn py-2 text-[9px] font-black rounded-lg border border-slate-700 bg-slate-800 text-slate-500 transition-all">通常</button>
+                            <button onclick="toggleSpeedFilter('fast')" id="speed-fast" class="speed-btn py-2 text-[9px] font-black rounded-lg border border-slate-700 bg-slate-800 text-slate-500 transition-all">速い</button>
                         </div>
                         <label id="no-acceleration-label" class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" id="no-acceleration" class="sr-only" onchange="updateFilters()">
@@ -420,7 +420,7 @@
                 forced: "なし",
                 hunt: 80, normalHunt: 50, specialHunt: 80, huntTxt: "80 / 50",
                 speed: 1.7, maxSpeed: 1.7, hasAccel: true, hasNormalSpeed: true,
-                note: "同室でVCや無線を使うと活発化。<br><span class='font-bold'>同室でVCや無線を使う : 80%以下</span><br>ハント中は2.5m内の声や無線、電子機器に反応 (通常声・無線9m、電子機器7.5m) 。"
+                note: "同室でVCや無線を使うと活発化。<br><span class='font-bold'>同室でVCや無線を使う : 80%以下</span><br>ハント中は2.5m（狭い）内の声や無線、電子機器に反応 (通常声・無線9m、電子機器7.5m) 。"
             },
             {
                 id: "raiju",
@@ -527,18 +527,15 @@
                 
                 btn.disabled = shouldDisable;
                 
+                btn.className = 'hunt-level-btn py-2 text-[9px] font-black rounded-lg border border-slate-700 bg-slate-800 text-slate-500 transition-all';
+                
                 if (mode === currentHuntLevelFilter && !shouldDisable) {
-                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-400');
-                    btn.classList.remove('bg-slate-950', 'text-slate-500', 'border-slate-800', 'opacity-30', 'cursor-not-allowed');
-                } else {
-                    btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-400');
-                    btn.classList.add('bg-slate-950', 'text-slate-500', 'border-slate-800');
-                    
-                    if (shouldDisable) {
-                        btn.classList.add('opacity-30', 'cursor-not-allowed');
-                    } else {
-                        btn.classList.remove('opacity-30', 'cursor-not-allowed');
-                    }
+                    btn.classList.remove('text-slate-500');
+                    btn.classList.add('checked', 'text-white');
+                }
+                
+                if (shouldDisable) {
+                    btn.classList.add('opacity-30', 'cursor-not-allowed');
                 }
             });
         }
@@ -572,18 +569,15 @@
                 
                 btn.disabled = isSpeedLocked;
                 
+                btn.className = 'speed-btn py-2 text-[9px] font-black rounded-lg border border-slate-700 bg-slate-800 text-slate-500 transition-all';
+                
                 if (m === currentSpeedFilter && !isSpeedLocked) {
-                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-400');
-                    btn.classList.remove('bg-slate-950', 'text-slate-500', 'border-slate-800', 'opacity-30', 'cursor-not-allowed');
-                } else {
-                    btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-400');
-                    btn.classList.add('bg-slate-950', 'text-slate-500', 'border-slate-800');
-                    
-                    if (isSpeedLocked) {
-                        btn.classList.add('opacity-30', 'cursor-not-allowed');
-                    } else {
-                        btn.classList.remove('opacity-30', 'cursor-not-allowed');
-                    }
+                    btn.classList.remove('text-slate-500');
+                    btn.classList.add('checked', 'text-white');
+                }
+                
+                if (isSpeedLocked) {
+                    btn.classList.add('opacity-30', 'cursor-not-allowed');
                 }
             });
         }
@@ -705,11 +699,15 @@
                 const isExcluded = excludedEvidence.includes(ev);
                 const btn = document.createElement('button');
                 
-                let style = 'bg-slate-800 border-slate-700 text-slate-500';
-                if (isSelected) style = 'checked shadow-lg shadow-blue-500/20 border-blue-400 bg-blue-600 text-white';
-                if (isExcluded) style = 'bg-red-900/50 border-red-500 text-red-200';
+                btn.className = 'text-left px-4 py-2.5 rounded-xl text-[10px] font-black transition-all border bg-slate-800 border-slate-700 text-slate-500';
                 
-                btn.className = `text-left px-4 py-2.5 rounded-xl text-[10px] font-black transition-all border ${style}`;
+                if (isSelected) {
+                    btn.classList.remove('text-slate-500');
+                    btn.classList.add('checked', 'text-white');
+                }
+                if (isExcluded) {
+                    btn.className = 'text-left px-4 py-2.5 rounded-xl text-[10px] font-black transition-all border bg-red-900/50 border-red-500 text-red-200';
+                }
                 btn.innerText = ev;
                 btn.onclick = () => toggleEvidence(ev);
                 evList.appendChild(btn);
