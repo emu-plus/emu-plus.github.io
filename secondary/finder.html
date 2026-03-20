@@ -136,7 +136,7 @@
         <header class="text-center mb-8 border-b border-slate-800 pb-6">
             <h1 class="text-4xl font-black text-blue-500 tracking-tighter italic">PHASMO FINDER</h1>
             <p class="text-slate-500 text-[10px] mt-2 tracking-[0.2em] font-bold">- Phasmophobia Field Terminal -</p>
-            <p class="text-slate-600 text-[9px] mt-2 tracking-[0.1em]">参考：<a href="https://gamerch.com/phasmophobiajp/805802" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ゴーストの特徴一覧表 (Phasmophobia 日本語wiki)</a>　Last Update : 2026/3/19</p>
+            <p class="text-slate-600 text-[9px] mt-2 tracking-[0.1em]">参考：<a href="https://gamerch.com/phasmophobiajp/805802" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ゴーストの特徴一覧表 (Phasmophobia 日本語wiki)</a>　Last Update : 2026/3/20</p>
             <div class="mt-2 flex flex-wrap justify-center items-center gap-x-1 gap-y-1">
                 <span class="text-slate-600 text-[9px] tracking-[0.1em]">便利外部サイト :</span>
                 <a href="https://stopwatch.onl.jp/" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ストップウォッチ</a>
@@ -187,7 +187,7 @@
                         <label id="special-hunt-label" class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" id="special-hunt" class="sr-only" onchange="updateFilters()">
                             <div class="custom-checkbox group-hover:border-slate-500"></div>
-                            <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">特殊ハント含む</span>
+                            <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">特殊ハントを含む</span>
                         </label>
                     </section>
                     
@@ -201,16 +201,25 @@
                                 </svg>
                             </button>
                         </div>
+                        
                         <div class="grid grid-cols-3 gap-2 mb-4">
                             <button onclick="toggleSpeedFilter('slow')" id="speed-slow" class="speed-btn filter-btn filter-btn-hover py-2 text-[9px] font-black rounded-lg">遅い</button>
                             <button onclick="toggleSpeedFilter('normal')" id="speed-normal" class="speed-btn filter-btn filter-btn-hover py-2 text-[9px] font-black rounded-lg">通常</button>
                             <button onclick="toggleSpeedFilter('fast')" id="speed-fast" class="speed-btn filter-btn filter-btn-hover py-2 text-[9px] font-black rounded-lg">速い</button>
                         </div>
-                        <label id="no-acceleration-label" class="flex items-center gap-3 cursor-pointer group">
-                            <input type="checkbox" id="no-acceleration" class="sr-only" onchange="updateFilters()">
-                            <div class="custom-checkbox group-hover:border-slate-500"></div>
-                            <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">視認加速なし</span>
-                        </label>
+                        
+                        <div class="space-y-3">
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="toggleAccelFilter('with')" id="accel-with" class="accel-btn filter-btn filter-btn-hover py-2 text-[9px] font-black rounded-lg">視認加速あり</button>
+                                <button onclick="toggleAccelFilter('without')" id="accel-without" class="accel-btn filter-btn filter-btn-hover py-2 text-[9px] font-black rounded-lg">視認加速なし</button>
+                            </div>
+                            
+                            <label id="exclude-partial-label" class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" id="exclude-partial" class="sr-only" onchange="updateFilters()">
+                                <div class="custom-checkbox group-hover:border-slate-500"></div>
+                                <span class="text-[10px] text-slate-400 group-hover:text-slate-200 transition-colors uppercase font-black">通常のみ視認加速を除く</span>
+                            </label>
+                        </div>
                     </section>
                     
                     <div class="pt-4 border-t border-slate-800">
@@ -481,6 +490,7 @@
         let excludedEvidence = [];
         let excludedIds = new Set();
         let currentSpeedFilter = null;
+        let currentAccelFilter = null;
         let currentHuntLevelFilter = null;
         let isHuntLocked = true;
         let isSpeedLocked = true;
@@ -553,7 +563,7 @@
                 
                 btn.disabled = shouldDisable;
                 
-                btn.className = 'hunt-level-btn filter-btn py-2 text-[9px] font-black rounded-lg';
+                btn.classList.remove('filter-btn-active', 'filter-btn-disabled', 'filter-btn-hover');
                 
                 if (shouldDisable) {
                     btn.classList.add('filter-btn-disabled');
@@ -589,6 +599,61 @@
             }
         }
         
+        function toggleAccelFilter(mode) {
+            if (isSpeedLocked) return;
+
+            const excludePartialCheckbox = document.getElementById('exclude-partial');
+
+            if (currentAccelFilter === mode) {
+                currentAccelFilter = null;
+                excludePartialCheckbox.checked = false;
+            } else {
+                currentAccelFilter = mode;
+
+                if (mode !== 'with') {
+                    excludePartialCheckbox.checked = false;
+                }
+            }
+
+            updateAccelButtons();
+            render();
+        }
+        
+        function updateAccelButtons() {
+            ['with', 'without'].forEach(mode => {
+                const btn = document.getElementById(`accel-${mode}`);
+                if (!btn) return;
+                
+                btn.disabled = isSpeedLocked;
+                
+                btn.classList.remove('filter-btn-active', 'filter-btn-disabled', 'filter-btn-hover');
+                
+                if (isSpeedLocked) {
+                    btn.classList.add('filter-btn-disabled');
+                } else {
+                    btn.classList.add('filter-btn-hover');
+                }
+                
+                if (mode === currentAccelFilter && !isSpeedLocked) {
+                    btn.classList.add('filter-btn-active');
+                }
+            });
+            
+            const excludePartialCheckbox = document.getElementById('exclude-partial');
+            const excludePartialLabel = document.getElementById('exclude-partial-label');
+            
+            const canUseExcludePartial = !isSpeedLocked && currentAccelFilter === 'with';
+            
+            excludePartialCheckbox.disabled = !canUseExcludePartial;
+            
+            if (!canUseExcludePartial) {
+                excludePartialCheckbox.checked = false;
+                excludePartialLabel.classList.add('opacity-30', 'cursor-not-allowed');
+            } else {
+                excludePartialLabel.classList.remove('opacity-30', 'cursor-not-allowed');
+            }
+        }
+        
         function updateSpeedButtons() {
             ['slow', 'normal', 'fast'].forEach(m => {
                 const btn = document.getElementById(`speed-${m}`);
@@ -596,7 +661,7 @@
                 
                 btn.disabled = isSpeedLocked;
                 
-                btn.className = 'speed-btn filter-btn py-2 text-[9px] font-black rounded-lg';
+                btn.classList.remove('filter-btn-active', 'filter-btn-disabled', 'filter-btn-hover');
                 
                 if (isSpeedLocked) {
                     btn.classList.add('filter-btn-disabled');
@@ -608,6 +673,8 @@
                     btn.classList.add('filter-btn-active');
                 }
             });
+            
+            updateAccelButtons();
         }
         
         function toggleSpeedLock() {
@@ -651,10 +718,11 @@
                 excludedEvidence.length > 0 ||
                 excludedIds.size > 0 ||
                 currentSpeedFilter !== null ||
+                currentAccelFilter !== null ||
                 currentHuntLevelFilter !== null ||
                 parseInt(document.getElementById('hunt-slider').value) > 0 ||
                 document.getElementById('special-hunt').checked ||
-                document.getElementById('no-acceleration').checked ||
+                document.getElementById('exclude-partial').checked ||
                 !isHuntLocked ||
                 !isSpeedLocked;
                 
@@ -695,24 +763,23 @@
             // 移動速度ロックの状態同期
             const speedIcon = document.getElementById('speed-lock-icon');
             const speedBtn = document.getElementById('speed-lock-btn');
-            const noAccelCheckbox = document.getElementById('no-acceleration');
-            const noAccelLabel = document.getElementById('no-acceleration-label');
-            
-            noAccelCheckbox.disabled = isSpeedLocked;
-            
+
             if (isSpeedLocked) {
                 speedIcon.innerHTML = '<path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />';
                 speedIcon.classList.add('text-amber-500');
                 speedIcon.classList.remove('text-green-500');
                 speedBtn.classList.replace('bg-green-500/10', 'bg-slate-800');
-                noAccelLabel.classList.add('opacity-30', 'cursor-not-allowed');
             } else {
                 speedIcon.innerHTML = '<path d="M10 12a2 2 0 100 4 2 2 0 000-4z" /><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" opacity=".3" /><path d="M14 7V9H16V7a4 4 0 00-8 0v2h2V7a2 2 0 114 0z" />';
                 speedIcon.classList.remove('text-amber-500');
                 speedIcon.classList.add('text-green-500');
                 speedBtn.classList.replace('bg-slate-800', 'bg-green-500/10');
-                noAccelLabel.classList.remove('opacity-30', 'cursor-not-allowed');
             }
+
+            updateHuntLevelButtons();
+            updateSpeedButtons();
+            updateAccelButtons();
+            updateResetButtonAppearance();
             
             updateHuntLevelButtons();
             updateSpeedButtons();
@@ -747,7 +814,7 @@
             
             const huntLimit = parseInt(document.getElementById('hunt-slider').value);
             const useSpecial = document.getElementById('special-hunt').checked;
-            const noAccelChecked = document.getElementById('no-acceleration').checked;
+            const excludePartialChecked = document.getElementById('exclude-partial').checked;
             
             const filtered = ghosts.filter(g => {
                 let evMatch = selectedEv.every(s => g.evidence.includes(s));
@@ -780,7 +847,16 @@
                     }
                 }
                 
-                if (noAccelChecked && g.hasAccel === true) return false;
+                if (currentAccelFilter === 'with') {
+                    if (excludePartialChecked) {
+                        if (g.hasAccel !== true) return false;
+                    } else {
+                        if (!(g.hasAccel === true || g.hasAccel === 'partial')) return false;
+                    }
+                } else if (currentAccelFilter === 'without') {
+                    if (g.hasAccel !== false) return false;
+                }
+                
                 return true;
             });
             
@@ -839,7 +915,7 @@
                                 <div class="w-full md:w-1/2 bg-slate-950 p-4 rounded-2xl border border-slate-800 text-[10px] space-y-1.5 font-mono">
                                     <div class="flex"><span class="w-24 text-slate-500 font-bold shrink-0">確定証拠 :</span><span class="${forcedColor}">${g.forced}</span></div>
                                     <div class="flex"><span class="w-24 text-slate-500 font-bold shrink-0">ハント開始 :</span><span class="text-slate-200">${hStr}</span></div>
-                                    <div class="flex"><span class="w-24 text-slate-500 font-bold shrink-0">移動速度 :</span><span class="text-slate-200">${sStr}</span><span class="${g.hasAccel === false ? 'text-blue-400' : 'text-slate-200'}">${g.hasAccel === true ? '視認加速あり' : (g.hasAccel === 'partial' ? '通常速度のみあり' : '視認加速なし')}</span></div>
+                                    <div class="flex"><span class="w-24 text-slate-500 font-bold shrink-0">移動速度 :</span><span class="text-slate-200">${sStr}</span><span class="${g.hasAccel === false ? 'text-blue-400' : 'text-slate-200'}">${g.hasAccel === true ? '視認加速あり' : (g.hasAccel === 'partial' ? '通常のみ視認加速あり' : '視認加速なし')}</span></div>
                                 </div>
                             </div>
                             <div class="bg-slate-800/20 p-4 rounded-2xl border border-slate-800/50 text-[11px] text-slate-400 italic font-medium">
@@ -876,13 +952,14 @@
                 selectedEv,
                 excludedEvidence,
                 currentSpeedFilter,
+                currentAccelFilter,
                 currentHuntLevelFilter,
                 isHuntLocked,
                 isSpeedLocked,
                 excludedIds: Array.from(excludedIds),
                 huntValue: parseInt(document.getElementById('hunt-slider').value),
                 specialHunt: document.getElementById('special-hunt').checked,
-                noAccelChecked: document.getElementById('no-acceleration').checked
+                excludePartialChecked: document.getElementById('exclude-partial').checked
             };
             localStorage.setItem('phasmo-terminal-state', JSON.stringify(state));
         }
@@ -895,6 +972,7 @@
                     selectedEv = parsed.selectedEv || [];
                     excludedEvidence = parsed.excludedEvidence || [];
                     currentSpeedFilter = parsed.currentSpeedFilter || null;
+                    currentAccelFilter = parsed.currentAccelFilter || null;
                     currentHuntLevelFilter = parsed.currentHuntLevelFilter || null;
                     isHuntLocked = parsed.isHuntLocked !== undefined ? parsed.isHuntLocked : true;
                     isSpeedLocked = parsed.isSpeedLocked !== undefined ? parsed.isSpeedLocked : true;
@@ -913,7 +991,13 @@
                     document.getElementById('hunt-val').innerText = `${slider.value}%`;
                     
                     document.getElementById('special-hunt').checked = parsed.specialHunt || false;
-                    document.getElementById('no-acceleration').checked = parsed.noAccelChecked || false;
+                    
+                    const excludePartialCheckbox = document.getElementById('exclude-partial');
+                    excludePartialCheckbox.checked = parsed.excludePartialChecked || false;
+                    
+                    if (currentAccelFilter !== 'with') {
+                        excludePartialCheckbox.checked = false;
+                    }
                 } catch (e) {
                     console.error("セーブデータの読み込みに失敗しました", e);
                 }
@@ -925,6 +1009,7 @@
             excludedEvidence = [];
             excludedIds.clear();
             currentSpeedFilter = null;
+            currentAccelFilter = null;
             currentHuntLevelFilter = null;
             
             isHuntLocked = true;
@@ -948,10 +1033,11 @@
             speedBtn.className = "p-1 rounded bg-slate-800 border border-slate-700 hover:bg-slate-700 transition-colors";
             
             document.getElementById('special-hunt').checked = false;
-            document.getElementById('no-acceleration').checked = false;
+            document.getElementById('exclude-partial').checked = false;
             
             updateHuntLevelButtons();
             updateSpeedButtons();
+            updateAccelButtons();
             updateFilters();
             
             saveState();
