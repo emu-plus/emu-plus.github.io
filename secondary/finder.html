@@ -136,7 +136,7 @@
         <header class="text-center mb-8 border-b border-slate-800 pb-6">
             <h1 class="text-4xl font-black text-blue-500 tracking-tighter italic">PHASMO FINDER</h1>
             <p class="text-slate-500 text-[10px] mt-2 tracking-[0.2em] font-bold">- Phasmophobia Field Terminal -</p>
-            <p class="text-slate-600 text-[9px] mt-2 tracking-[0.1em]">参考：<a href="https://gamerch.com/phasmophobiajp/805802" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ゴーストの特徴一覧表 (Phasmophobia 日本語wiki)</a>　Last Update : 2026/5/16</p>
+            <p class="text-slate-600 text-[9px] mt-2 tracking-[0.1em]">参考：<a href="https://gamerch.com/phasmophobiajp/805802" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ゴーストの特徴一覧表 (Phasmophobia 日本語wiki)</a>　Last Update : 2026/5/25</p>
             <div class="mt-2 flex flex-wrap justify-center items-center gap-x-1 gap-y-1">
                 <span class="text-slate-600 text-[9px] tracking-[0.1em]">便利外部サイト :</span>
                 <a href="https://stopwatch.onl.jp/" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ストップウォッチ</a>
@@ -255,7 +255,7 @@
                 forced: "なし",
                 hunt: 50, specialHunt: 50,
                 speed: 1.7, maxSpeed: 1.7, hasAccel: true, hasNormalSpeed: true,
-                note: "同室に人がいると活発化。<br>白い靄なし。<br>点滅が短く実体化している時間が長い。<br>超常現象で<span class='text-orange-500 font-bold'>正気度減少量2倍</span>。"
+                note: "同室に人がいると活発化。<br>超常現象の白い靄をしない。<br>点滅が短く実体化している時間が長い。<br>超常現象で<span class='text-orange-500 font-bold'>正気度減少量2倍</span>。"
             },
             {
                 id: "obambo",
@@ -264,7 +264,7 @@
                 forced: "なし",
                 hunt: 65, minHunt: 10, specialHunt: 65, huntTxt: "65 / 10",
                 speed: 1.445, maxSpeed: 1.955, hasAccel: true, hasNormalSpeed: false,
-                note: "2分毎に状態変化 (ハント中も起こる) 。<br><span class='font-bold'>攻撃的な状態 : 65%以下 & 1.955m/s (速) & 干渉・超常現象少 & ハントの長さ0.8倍</span><br><span class='font-bold'>穏やかな状態 : 10%以下 & 1.445m/s (遅) & 干渉・超常現象多</span>"
+                note: "最初の1分は穏やかな状態。その後2分毎に状態を切り替える (現在の分を4で割った時に余りが1 or 2 : 攻撃的な状態、余りが0 or 3 : 穏やかな状態。ハント中も起こる) 。<br><span class='font-bold'>攻撃的な状態 : 65%以下 & 1.955m/s (速) & 干渉・超常現象少 & ハントの長さ0.8倍</span><br><span class='font-bold'>穏やかな状態 : 10%以下 & 1.445m/s (遅) & 干渉・超常現象多</span>"
             },
             {
                 id: "onryo",
@@ -300,7 +300,7 @@
                 forced: "なし",
                 hunt: 70, specialHunt: 70, huntTxt: "70 / 50",
                 speed: 1.7, maxSpeed: 2.21, speedTxt: "2.21 / 1.7", hasAccel: false, hasNormalSpeed: false,
-                note: "<span class='font-bold'>同室で走る : 70%以下</span><br>声・電子機器・足音で感知される。<br>しゃがみ歩き : 足音感知範囲10m<br>直立歩き : 足音感知範囲15m<br>走り : 足音感知範囲30m<br><span class='font-bold'>人を感知中 : 2.21m/s (速)</span><br>5m圏内で音を出すと視認される。",
+                note: "超常現象の実態化して追跡、白い靄をしない。<br><span class='font-bold'>同室で走る : 70%以下</span><br>声・電子機器・足音で感知される。<br>しゃがみ歩き : 足音感知範囲10m<br>直立歩き : 足音感知範囲15m<br>走り : 足音感知範囲30m<br><span class='font-bold'>人を感知中 : 2.21m/s (速)</span><br>5m内で音を出すと視認される。<br>1m内であれば障害物があってもキルが可能。",
                 isNew: true
             },
             {
