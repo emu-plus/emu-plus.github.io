@@ -136,7 +136,7 @@
         <header class="text-center mb-8 border-b border-slate-800 pb-6">
             <h1 class="text-4xl font-black text-blue-500 tracking-tighter italic">PHASMO FINDER</h1>
             <p class="text-slate-500 text-[10px] mt-2 tracking-[0.2em] font-bold">- Phasmophobia Field Terminal -</p>
-            <p class="text-slate-600 text-[9px] mt-2 tracking-[0.1em]">参考：<a href="https://gamerch.com/phasmophobiajp/805802" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ゴーストの特徴一覧表 (Phasmophobia 日本語wiki)</a>　Last Update : 2026/5/25</p>
+            <p class="text-slate-600 text-[9px] mt-2 tracking-[0.1em]">参考：<a href="https://gamerch.com/phasmophobiajp/805802" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ゴーストの特徴一覧表 (Phasmophobia 日本語wiki)</a>　Last Update : 2026/6/3</p>
             <div class="mt-2 flex flex-wrap justify-center items-center gap-x-1 gap-y-1">
                 <span class="text-slate-600 text-[9px] tracking-[0.1em]">便利外部サイト :</span>
                 <a href="https://stopwatch.onl.jp/" target="_blank" rel="noreferrer noopener" class="text-blue-400 hover:text-blue-200 text-[9px]">ストップウォッチ</a>
@@ -299,8 +299,8 @@
                 evidence: ["紫外線", "ゴーストオーブ", "スピリットボックス"],
                 forced: "なし",
                 hunt: 70, specialHunt: 70, huntTxt: "70 / 50",
-                speed: 1.7, maxSpeed: 2.21, speedTxt: "2.21 / 1.7", hasAccel: false, hasNormalSpeed: false,
-                note: "超常現象の実態化して追跡、白い靄をしない。<br><span class='font-bold'>同室で走る : 70%以下</span><br>声・電子機器・足音で感知される。<br>しゃがみ歩き : 足音感知範囲10m<br>直立歩き : 足音感知範囲15m<br>走り : 足音感知範囲30m<br><span class='font-bold'>人を感知中 : 2.21m/s (速)</span><br>5m内で音を出すと視認される。<br>1m内であれば障害物があってもキルが可能。",
+                speed: 1.7, maxSpeed: 2.21, speedTxt: "2.21 / 1.7", hasAccel: true, hasNormalSpeed: true,
+                note: "超常現象の実態化して追跡、白い靄をしない。<br><span class='font-bold'>同室で走る : 70%以下</span><br>声・電子機器・足音で感知される。<br>しゃがみ歩き : 足音感知範囲10m<br>直立歩き : 足音感知範囲15m<br>走り : 足音感知範囲30m<br><span class='font-bold'>人を感知中 : 2.21m/s (速)</span><br>5m内で音を出すと視認され、視認された場合のみ視認加速あり。<br>視認していない場合、感知した一番近い足音へ向かい、現在向かっている位置に到達するまで、より遠いまたは優先度が低い他の音を無視する (優先度 : 走り > 直立歩き > しゃがみ歩き) 。<br>1m内であれば障害物があってもキルが可能。",
                 isNew: true
             },
             {
